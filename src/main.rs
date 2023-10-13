@@ -11,7 +11,7 @@ fn main() {
     let code = "
         # Fibonacci
 
-        # let n be 0;
+        let n be 0;
         let m be 1;
 
         rep 9 {
@@ -20,7 +20,7 @@ fn main() {
         }
 
         print n;
-        ";
+    ";
 
     let tokens = tokenize_program(code).expect("tokenization failed");
 

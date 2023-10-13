@@ -15,7 +15,7 @@
 <print> ::= "print " <ws> <expr> <ws> ";"
 ```
 
-# Expressions:
+# Expressions
 ```
 <expr> ::= 
     <expr> <ws> "&" <ws> <sent> |

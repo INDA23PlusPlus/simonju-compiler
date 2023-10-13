@@ -38,7 +38,6 @@ pub fn parse_program(tokens: Vec<Token>) -> Result<Program, ParserError> {
 }
 
 fn parse_block<T>(tokens: &mut Peekable<T>) -> Result<Block, ParserError>  where T: Iterator<Item = Token> + Clone {
-    
     let mut statements = vec![];
 
     while let Some(token) = tokens.peek() {
@@ -58,7 +57,6 @@ fn parse_block<T>(tokens: &mut Peekable<T>) -> Result<Block, ParserError>  where
 }
 
 fn parse_statement<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let statement = match tokens.next() {
         Some(token) => match token {
             Token::Let      => parse_let_be(tokens)?,
@@ -74,7 +72,6 @@ fn parse_statement<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError
 }
 
 fn parse_let_be<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let variable = match tokens.next() {
         Some(token) => match token {
             Token::Variable(variable) => variable,
@@ -108,7 +105,6 @@ fn parse_let_be<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> w
 }
 
 fn parse_set_to<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let variable = match tokens.next() {
         Some(token) => match token {
             Token::Variable(variable) => variable,
@@ -142,7 +138,6 @@ fn parse_set_to<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> w
 }
 
 fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let expr = match tokens.peek() {
         Some(_) => parse_expr(tokens)?,
         None => return Err(ParserError::UnexpectedEnd),
@@ -150,6 +145,7 @@ fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wher
 
     match tokens.next() {
         Some(token) => match token {
+            Token::LBrace => (),
             _ => return Err(ParserError::UnexpectedToken { expected: Token::Be, received: token })
         },
         None => return Err(ParserError::UnexpectedEnd),
@@ -162,7 +158,7 @@ fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wher
 
     match tokens.next() {
         Some(token) => match token {
-            Token::RBrace => println!("RBrace"),
+            Token::RBrace => (),
             _ => return Err(ParserError::UnexpectedToken { expected: Token::RBrace, received: token })
         },
         None => return Err(ParserError::UnexpectedEnd),
@@ -172,7 +168,6 @@ fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wher
 }
 
 fn parse_print<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let expr = match tokens.peek() {
         Some(_) => parse_expr(tokens)?,
         None => return Err(ParserError::UnexpectedEnd),
@@ -190,7 +185,6 @@ fn parse_print<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wh
 }
 
 fn parse_expr<T>(tokens: &mut Peekable<T>) -> Result<Expr, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let expr = match tokens.peek() {
         Some(_) => Expr::Sent(parse_sent(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
@@ -215,7 +209,6 @@ fn parse_expr<T>(tokens: &mut Peekable<T>) -> Result<Expr, ParserError> where T:
 }
 
 fn parse_sent<T>(tokens: &mut Peekable<T>) -> Result<Sent, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let comp = match tokens.peek() {
         Some(_) => Sent::Comp(parse_comp(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
@@ -244,7 +237,6 @@ fn parse_sent<T>(tokens: &mut Peekable<T>) -> Result<Sent, ParserError> where T:
 }
 
 fn parse_comp<T>(tokens: &mut Peekable<T>) -> Result<Comp, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let term = match tokens.peek() {
         Some(_) => Comp::Term(parse_term(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
@@ -269,7 +261,6 @@ fn parse_comp<T>(tokens: &mut Peekable<T>) -> Result<Comp, ParserError> where T:
 }
 
 fn parse_term<T>(tokens: &mut Peekable<T>) -> Result<Term, ParserError> where T: Iterator<Item = Token> + Clone {
-
     let fact = match tokens.peek() {
         Some(_) => Term::Fact(parse_fact(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
@@ -320,8 +311,6 @@ fn parse_fact<T>(tokens: &mut Peekable<T>) -> Result<Fact, ParserError> where T:
 }
 
 fn parse_prim<T>(tokens: &mut Peekable<T>) -> Result<Prim, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Prim");
-
     let prim = match tokens.next() {
         Some(token) => match token {
             Token::LParen => {
