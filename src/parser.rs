@@ -38,7 +38,6 @@ pub fn parse_program(tokens: Vec<Token>) -> Result<Program, ParserError> {
 }
 
 fn parse_block<T>(tokens: &mut Peekable<T>) -> Result<Block, ParserError>  where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Block");
     
     let mut statements = vec![];
 
@@ -49,20 +48,16 @@ fn parse_block<T>(tokens: &mut Peekable<T>) -> Result<Block, ParserError>  where
 
         match parse_statement(tokens) {
             Ok(statement) => {
-                println!("Pushing Statement");
                 statements.push(statement);
             }
             Err(_) => break,
         } 
     }
 
-    println!("Returning Block");
-
     Ok(Block{ statements })
 }
 
 fn parse_statement<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Statement");
 
     let statement = match tokens.next() {
         Some(token) => match token {
@@ -75,13 +70,10 @@ fn parse_statement<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    println!("Returning Statement");
-
     Ok(statement)
 }
 
 fn parse_let_be<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Let Be");
 
     let variable = match tokens.next() {
         Some(token) => match token {
@@ -112,13 +104,10 @@ fn parse_let_be<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> w
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    println!("Returning Let Be");
-
     Ok(Statement::LetBe(LetBe { variable, expr }))
 }
 
 fn parse_set_to<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Set To");
 
     let variable = match tokens.next() {
         Some(token) => match token {
@@ -149,13 +138,10 @@ fn parse_set_to<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> w
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    println!("Returning Set To");
-
     Ok(Statement::SetTo(SetTo { variable, expr }))
 }
 
 fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("\nParsing Rep");
 
     let expr = match tokens.peek() {
         Some(_) => parse_expr(tokens)?,
@@ -164,7 +150,6 @@ fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wher
 
     match tokens.next() {
         Some(token) => match token {
-            Token::LBrace => println!("LBrace"),
             _ => return Err(ParserError::UnexpectedToken { expected: Token::Be, received: token })
         },
         None => return Err(ParserError::UnexpectedEnd),
@@ -183,13 +168,10 @@ fn parse_rep<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wher
         None => return Err(ParserError::UnexpectedEnd),
     }
 
-    println!("Returning Rep\n");
-
     Ok(Statement::Rep(Rep { expr, block }))
 }
 
 fn parse_print<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Print");
 
     let expr = match tokens.peek() {
         Some(_) => parse_expr(tokens)?,
@@ -204,13 +186,10 @@ fn parse_print<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wh
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    println!("Returning Print");
-
     Ok(Statement::Print(Print { expr } ))
 }
 
 fn parse_expr<T>(tokens: &mut Peekable<T>) -> Result<Expr, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Expr");
 
     let expr = match tokens.peek() {
         Some(_) => Expr::Sent(parse_sent(tokens)?),
@@ -232,13 +211,10 @@ fn parse_expr<T>(tokens: &mut Peekable<T>) -> Result<Expr, ParserError> where T:
         None => expr,
     };
 
-    println!("Returning Expr");
-
     Ok(expr)
 }
 
 fn parse_sent<T>(tokens: &mut Peekable<T>) -> Result<Sent, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Sent");
 
     let comp = match tokens.peek() {
         Some(_) => Sent::Comp(parse_comp(tokens)?),
@@ -264,13 +240,10 @@ fn parse_sent<T>(tokens: &mut Peekable<T>) -> Result<Sent, ParserError> where T:
         None => comp,
     };
 
-    println!("Returning Sent");
-
     Ok(sent)
 }
 
 fn parse_comp<T>(tokens: &mut Peekable<T>) -> Result<Comp, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Comp");
 
     let term = match tokens.peek() {
         Some(_) => Comp::Term(parse_term(tokens)?),
@@ -292,13 +265,10 @@ fn parse_comp<T>(tokens: &mut Peekable<T>) -> Result<Comp, ParserError> where T:
         None => term,
     };
 
-    println!("Returning Comp");
-
     Ok(comp)
 }
 
 fn parse_term<T>(tokens: &mut Peekable<T>) -> Result<Term, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Term");
 
     let fact = match tokens.peek() {
         Some(_) => Term::Fact(parse_fact(tokens)?),
@@ -318,14 +288,10 @@ fn parse_term<T>(tokens: &mut Peekable<T>) -> Result<Term, ParserError> where T:
         None => fact,
     };
 
-    println!("Returning Term");
-
     Ok(term)
 }
 
 fn parse_fact<T>(tokens: &mut Peekable<T>) -> Result<Fact, ParserError> where T: Iterator<Item = Token> + Clone {
-    println!("Parsing Fact");
-
     let fact = match tokens.peek() {
         Some(token) => match token {
             Token::Is => {
@@ -350,8 +316,6 @@ fn parse_fact<T>(tokens: &mut Peekable<T>) -> Result<Fact, ParserError> where T:
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    println!("Returning Fact");
-
     Ok(fact)
 }
 
@@ -361,11 +325,7 @@ fn parse_prim<T>(tokens: &mut Peekable<T>) -> Result<Prim, ParserError> where T:
     let prim = match tokens.next() {
         Some(token) => match token {
             Token::LParen => {
-                println!("Found LParen");
-
                 let expr = parse_expr(tokens)?;
-
-                println!("Found Expr");
 
                 match tokens.next() {
                     Some(token) => match token {
@@ -375,12 +335,9 @@ fn parse_prim<T>(tokens: &mut Peekable<T>) -> Result<Prim, ParserError> where T:
                     None => return Err(ParserError::UnexpectedEnd),
                 }
 
-                println!("Found RParen");
-
                 Prim::Expr(Box::new(expr))
             },
             Token::Constant(constant) => {
-                println!("constant: {constant}");
                 Prim::Constant(Integer{ value: constant })
             },
             Token::Variable(variable) => Prim::Variable(variable.to_string()),
@@ -388,8 +345,6 @@ fn parse_prim<T>(tokens: &mut Peekable<T>) -> Result<Prim, ParserError> where T:
         }
         None => return Err(ParserError::UnexpectedEnd),
     };
-
-    println!("Returning Prim");
 
     Ok(prim)
 }
