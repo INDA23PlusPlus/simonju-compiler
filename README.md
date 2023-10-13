@@ -19,7 +19,7 @@ A compiler written in Rust for a custom programming language. The language suppo
 <print> ::= "print " <ws> <expr> <ws> ";"
 ```
 
-### Expressions:
+### Expressions
 ```
 <expr> ::= 
     <expr> <ws> "&" <ws> <sent> |
