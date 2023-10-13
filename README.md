@@ -1,5 +1,5 @@
 # simonju-compiler
-A compiler for a custom programming language. The language supports variable declaration/assignment, integers, integer comparisons, integer logic, conditional statements, repeat-loops, and printing to the console.
+A compiler written in Rust for a custom programming language. The language supports comments, variable declaration/assignment, integer arithmetic, integer comparisons, integer logic, conditional statements, repeat-loops, and printing to the console.
 
 ## Language grammar
 ### Program
@@ -59,29 +59,34 @@ A compiler for a custom programming language. The language supports variable dec
 <ws>       ::= (" " | "\t" | "\n" | "\r")+ | E
 ```
 
-## Basic program (Fibonacci numbers)
+## Basic program
 ```
+# Fibonacci numbers #
+
+# Declares variables
 let n be 0;
 let m be 1;
 
-rep 5 {
-    m be m + n;
-    n be m - n;
+# Sets n to the seventh fibonacci number
+rep 7 {
+    set m to m + n;
+    set n to m - n;
 }
 
-out n;
+# Prints the value of n to the console
+print n;
 ```
 
 ## Operator precedence (left to right)
-1. +a, -a, ?a, !a (unary)
-2. *, /
-3. +, -
-4. =, <, >
-5. &, |
+1. ``+a``, ``-a``, ``?a``, ``!a`` (unary)
+2. ``*``, ``/``
+3. ``+``, ``-``
+4. ``=``, ``<``, ``>``
+5. ``&``, ``|``
 
 ## Every expression becomes an integer!
 Comparisons return either 1 (true) or 0 (false),
-meaning we can do arithmetic on logical statements.
+meaning we can do arithmetic with logical expressions.
 Example:
 ```
 let x be 1;
@@ -92,7 +97,7 @@ let wtf be x<9>6=y+z*y-(+6-!x?5)=-(!x);
 ``` 
 
 ## Everything is a loop!
-The "rep" keyword is used to repeatedly execute a block some number of times.
+The ``rep`` keyword is used to repeatedly execute a block some number of times.
 Because comparisons return either 1 or 0 we can use loops to simulate if-statements;
 1 (true) means execute once, while 0 (false) means do not execute at all. The value is checked once and only once. This means that if a value in the condition changes during the execution of the block, 
 it will not have any effect on the number of iterations. Negative iteration values are treated like positive iteration values.
@@ -109,15 +114,20 @@ rep -(x < 2) {
 }
 ``` 
 
+## Comments
+Comments are single line and begin with ``#``.
+
 ## The ? operator
-The ? (is) operator converts positive numbers to 1 and negative numbers -1.
+The ``?`` (is) operator positive numbers to 1 and negative numbers to -1.
 Example:
 ```
 let x be (7*8);
-rep ?x {
-    print !x;
-}
-```
 
-## Comments
-Single line comments are supprted with '#'.
+# Prints x if x is non-zero
+rep ?x {
+    print x;
+}
+
+# Declares the absolute value of x
+let abs be x * ?x;
+```
