@@ -62,5 +62,5 @@ rep ?x {
 }
 ```
 
-## No comments!
-...
+## Comments
+Single line comments are supprted with '#'.
