@@ -1,5 +1,5 @@
 # simonju-compiler
-A compiler written in Rust for a custom programming language. The language supports comments, variable declaration/assignment, integer arithmetic, integer comparisons, integer logic, conditional statements, repeat-loops, and printing to the console.
+A compiler written in Rust for a custom programming language. The language supports comments, variable declaration/assignment, integer arithmetic, integer comparisons, integer logic, conditional statements, repeat-loops, and printing to the console. Currently, variables must be global.
 
 ## Language grammar
 ### Program
@@ -118,7 +118,7 @@ rep -(x < 2) {
 Comments are single line and begin with ``#``.
 
 ## The ? operator
-The ``?`` (is) operator positive numbers to 1 and negative numbers to -1.
+The ``?`` (is) operator converts positive numbers to 1 and negative numbers to -1.
 Example:
 ```
 let x be (7*8);
@@ -129,5 +129,5 @@ rep ?x {
 }
 
 # Declares the absolute value of x
-let abs be x * ?x;
+let abs_x be x * ?x;
 ```

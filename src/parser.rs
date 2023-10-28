@@ -1,4 +1,4 @@
-use std::{collections::binary_heap::Iter, iter::Peekable, borrow::Cow, fmt::Display};
+use std::{iter::Peekable, borrow::Cow, fmt::Display};
 
 use crate::{token::Token, ast::*};
 
@@ -17,19 +17,16 @@ impl Display for ParserError {
         let output: Cow<str> = match self {
             ParserError::UnexpectedToken { expected, received } => 
                 Cow::Owned(format!("unexpected token: {received} expected: {expected}")),
-            ParserError::UnexpectedEnd => 
-                "unexpected end".into(),
+            ParserError::UnexpectedEnd => "unexpected end".into(),
             ParserError::InvalidToken(token) => 
                 Cow::Owned(format!("invalid token: {token}")),
         };
 
-        write!(f, "<{output}>")
+        write!(f, "{output}")
     }
 }
 
 pub fn parse_program(tokens: Vec<Token>) -> Result<Program, ParserError> {
-    println!("Parsing Program");
-
     let mut iter = tokens.into_iter().peekable();
 
     let program = parse_block(&mut iter, false)?;

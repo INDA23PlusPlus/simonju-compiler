@@ -1,4 +1,4 @@
-use std::fmt::{Display, DebugList};
+use std::fmt::Display;
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Program {

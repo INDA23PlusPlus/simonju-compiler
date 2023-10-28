@@ -1,7 +1,5 @@
 use std::{fmt::Display, borrow::Cow};
 
-use crate::token;
-
 #[derive(Debug, Clone, PartialEq,)]
 pub enum Token {
     /* Arithmetic Operators */
@@ -39,9 +37,6 @@ pub enum Token {
     /* Data */
     Constant(i32),      // ex. 20
     Variable(String),   // ex. x
-
-    /* EOF */
-    EOF,
 }
 
 impl From<i32> for Token {
@@ -89,7 +84,6 @@ impl Display for Token {
             Token::Semicolon => "semicolon".into(),
             Token::Constant(i) => Cow::Owned(format!("constant({})", i)),
             Token::Variable(s) => Cow::Owned(format!("variable({})", s)),
-            Token::EOF => "eof".into(),
         };
 
         write!(f, "<{output}>")
