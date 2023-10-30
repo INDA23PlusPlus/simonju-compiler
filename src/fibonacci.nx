@@ -1,0 +1,11 @@
+# Fibonacci #
+
+let n be 0;
+let m be 1;
+
+rep 9 {
+    set m to m + n;
+    set n to m - n;
+}
+
+print n;
