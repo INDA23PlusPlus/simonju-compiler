@@ -185,101 +185,97 @@ fn parse_print<T>(tokens: &mut Peekable<T>) -> Result<Statement, ParserError> wh
 }
 
 fn parse_expr<T>(tokens: &mut Peekable<T>) -> Result<Expr, ParserError> where T: Iterator<Item = Token> {
-    let left_expr = match tokens.peek() {
+    let mut expr = match tokens.peek() {
         Some(_) => Expr::Sent(parse_sent(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    let expr = match tokens.peek() {
-        Some(token) => match token {
+    while let Some(token) = tokens.peek() {
+        match token {
             Token::And => {
                 tokens.next();
-                Expr::And(Box::new(left_expr), parse_sent(tokens)?)
+                expr = Expr::And(Box::new(expr), parse_sent(tokens)?)
             },
             Token::Or => {
                 tokens.next();
-                Expr::Or(Box::new(left_expr), parse_sent(tokens)?)
+                expr = Expr::Or(Box::new(expr), parse_sent(tokens)?)
             },
-            _ => left_expr,
-        },
-        None => left_expr,
-    };
+            _ => break,
+        }
+    }
 
     Ok(expr)
 }
 
 fn parse_sent<T>(tokens: &mut Peekable<T>) -> Result<Sent, ParserError> where T: Iterator<Item = Token> {
-    let left_sent = match tokens.peek() {
+    let mut sent = match tokens.peek() {
         Some(_) => Sent::Comp(parse_comp(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    let sent = match tokens.peek() {
-        Some(token) => match token {
-                Token::Equals => {
-                    tokens.next();
-                    Sent::Equals(Box::new(left_sent), parse_comp(tokens)?)
-                },
-                Token::Greater => {
-                    tokens.next();
-                    Sent::Greater(Box::new(left_sent), parse_comp(tokens)?)
-                },
-                Token::Less => {
-                    tokens.next();
-                    Sent::Less(Box::new(left_sent), parse_comp(tokens)?)
-                },
-                _ => left_sent,
-        },
-        None => left_sent,
-    };
+    while let Some(token) = tokens.peek() {
+        match token {
+            Token::Equals => {
+                tokens.next();
+                sent = Sent::Equals(Box::new(sent), parse_comp(tokens)?)
+            },
+            Token::Greater => {
+                tokens.next();
+                sent = Sent::Greater(Box::new(sent), parse_comp(tokens)?)
+            },
+            Token::Less => {
+                tokens.next();
+                sent = Sent::Less(Box::new(sent), parse_comp(tokens)?)
+            },
+            _ => break,
+        }
+    }
 
     Ok(sent)
 }
 
 fn parse_comp<T>(tokens: &mut Peekable<T>) -> Result<Comp, ParserError> where T: Iterator<Item = Token> {
-    let left_comp = match tokens.peek() {
+    let mut comp = match tokens.peek() {
         Some(_) => Comp::Term(parse_term(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    let comp = match tokens.peek() {
-        Some(token) => match token {
+    while let Some(token) = tokens.peek() {
+        match token {
             Token::Add => {
                 tokens.next();
-                Comp::Add(Box::new(left_comp), parse_term(tokens)?)
+                comp = Comp::Add(Box::new(comp), parse_term(tokens)?)
             },
             Token::Sub => {
                 tokens.next();
-                Comp::Sub(Box::new(left_comp), parse_term(tokens)?)
+                comp = Comp::Sub(Box::new(comp), parse_term(tokens)?)
             },
-            _ => left_comp,
-        },
-        None => left_comp,
-    };
+            _ => break,
+        }
+    }
 
     Ok(comp)
 }
 
 fn parse_term<T>(tokens: &mut Peekable<T>) -> Result<Term, ParserError> where T: Iterator<Item = Token> {
-    let left_term = match tokens.peek() {
+    let mut term = match tokens.peek() {
         Some(_) => Term::Fact(parse_fact(tokens)?),
         None => return Err(ParserError::UnexpectedEnd),
     };
 
-    let term = match tokens.peek() {
-        Some(token) => match token {
+    while let Some(token) = tokens.peek() {
+        match token {
             Token::Mul => {
                 tokens.next();
-                Term::Mul(Box::new(left_term), parse_fact(tokens)?)
+                term = Term::Mul(Box::new(term), parse_fact(tokens)?)
             },
             Token::Div => {
                 tokens.next();
-                Term::Div(Box::new(left_term), parse_fact(tokens)?)
+                term = Term::Div(Box::new(term), parse_fact(tokens)?)
             },
-            _ => left_term,
-        },
-        None => left_term,
-    };
+            _ => break,
+        }
+    }
 
     Ok(term)
 }

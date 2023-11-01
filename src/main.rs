@@ -46,7 +46,11 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
 
     let tokens = tokenize_program(&contents).expect("tokenization failed");
 
+    println!("tokens = {:#?}", tokens);
+
     let program = parse_program(tokens).expect("parsing failed");
+
+    println!("ast = {:#?}", program);
 
     validate_program(&program).expect("semantic analysis failed");
 
