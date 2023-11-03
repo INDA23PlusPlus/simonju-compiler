@@ -1,7 +1,13 @@
 # simonju-compiler
-A compiler written in Rust for a custom programming language. The language supports comments, variable declaration/assignment, integer arithmetic, integer comparisons, integer logic, conditional statements, repeat-loops, and printing to the console. Currently, variables must be global.
+A compiler written in Rust for a custom programming language. The language supports comments, variable declaration/assignment, integer arithmetic, integer comparisons, integer logic, conditional statements, repeat loops, and printing to the console. Currently, variables must be global.
 
-## Language grammar
+## How To Use
+```
+cargo run -- input_path output_path rs
+cargo run -- output_path
+```
+
+## Language Grammar
 ### Program
 ```
 <program>   ::= <block>
@@ -59,7 +65,7 @@ A compiler written in Rust for a custom programming language. The language suppo
 <ws>       ::= (" " | "\t" | "\n" | "\r")+ | E
 ```
 
-## Basic program
+## Basic Program
 ```
 # Fibonacci numbers #
 
@@ -96,21 +102,21 @@ let z be (x = 2) + y
 let wtf be x<9>6=y+z*y-(+6-!x?5)=-(!x);
 ``` 
 
-## Everything is a loop!
+## If-statements are fancy loops!
 The ``rep`` keyword is used to repeatedly execute a block some number of times.
 Because comparisons return either 1 or 0 we can use loops to simulate if-statements;
 1 (true) means execute once, while 0 (false) means do not execute at all. The value is checked once and only once. This means that if a value in the condition changes during the execution of the block, 
-it will not have any effect on the number of iterations. Negative iteration values are treated like positive iteration values.
+it will not have any effect on the number of iterations. Negative repeat values are treated as positive.
 Example:
 ```
-let x be 1;
-
+# If x Equals 1 Then Print x
 rep x = 1 {
-    out x;
+    print x;
 }
 
+# If x Less Than 2 Then Print x
 rep -(x < 2) {
-    out x;
+    print x;
 }
 ``` 
 

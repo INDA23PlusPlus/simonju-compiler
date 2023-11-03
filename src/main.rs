@@ -6,11 +6,13 @@ mod semantic_analyzer;
 mod ssa;
 mod generator;
 mod rust_transpiler;
+mod c_transpiler;
 
 use lexer::tokenize_program;
 use parser::parse_program;
 use semantic_analyzer::validate_program;
 use rust_transpiler::transpile_program_to_rust;
+use c_transpiler::transpile_program_to_c;
 
 use std::{env, fs, process, error};
 
@@ -28,6 +30,7 @@ use std::{env, fs, process, error};
 struct Config<'a> {
     pub input_path: &'a str,
     pub output_path: &'a str,
+    pub transpiler: Option<&'a str>,
 }
 
 fn parse_config(args: &[String]) -> Result<Config, &'static str> {
@@ -38,7 +41,13 @@ fn parse_config(args: &[String]) -> Result<Config, &'static str> {
     let input_path = &args[1];
     let output_path = &args[2];
 
-    Ok(Config { input_path, output_path })
+    if args.len() < 4 {
+        return Ok(Config { input_path, output_path, transpiler: None })
+    }
+
+    let transpiler = Some(args[3].as_ref());
+
+    Ok(Config { input_path, output_path, transpiler })
 }
 
 fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
@@ -46,15 +55,23 @@ fn run(config: Config) -> Result<(), Box<dyn error::Error>> {
 
     let tokens = tokenize_program(&contents).expect("tokenization failed");
 
-    println!("tokens = {:#?}", tokens);
-
     let program = parse_program(tokens).expect("parsing failed");
-
-    println!("ast = {:#?}", program);
 
     validate_program(&program).expect("semantic analysis failed");
 
-    std::fs::write(format!("{}.rs", config.output_path), transpile_program_to_rust(&program)).expect("write failed");
+    match config.transpiler {
+        Some(t) => {
+            if t == "c" {
+                std::fs::write(format!("{}.c", config.output_path), 
+                    transpile_program_to_c(&program)).expect("write to c failed");
+            }
+            if t == "rs" {
+                std::fs::write(format!("{}.rs", config.output_path), 
+                    transpile_program_to_rust(&program)).expect("write to rust failed");
+            }
+        }
+        None => (),
+    }
 
     Ok(())
 }
